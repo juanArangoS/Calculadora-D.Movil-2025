@@ -1,53 +1,44 @@
 import React, { useState } from 'react';
-import { Text, TextInput, View, StyleSheet, TouchableOpacity, } from 'react-native';
+import { Text, TextInput, View, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function App() {
   const [numero1, setNumero1] = useState('');
   const [numero2, setNumero2] = useState('');
   const [resultado, setResultado] = useState(null);
 
-  const sumarN = () => {
-    const a = parseFloat(numero1);
-    const b = parseFloat(numero2);
-    if (!isNaN(a) && !isNaN(b)) {
-      setResultado(a + b);
-    } else {
-      setResultado('Ingresa numeros validos');
-    }
-  };
-
-  const restarN = () => {
+  const operar = (tipo) => {
     const n1 = parseFloat(numero1);
     const n2 = parseFloat(numero2);
-    if (!isNaN(n1) && !isNaN(n2)) {
-      setResultado(n1 - n2);
-    } else {
-      setResultado('Ingresa numeros validos');
-    }
-  };
 
-  const multipN = () => {
-    const x = parseFloat(numero1);
-    const y = parseFloat(numero2);
-    if (!isNaN(x) && !isNaN(y)) {
-      setResultado(x * y);
-    } else {
-      setResultado('Ingresa numeros validos');
+    if (isNaN(n1) || isNaN(n2)) {
+      setResultado('Ingresa números válidos');
+      return;
     }
-  };
 
-  const divN = () => {
-    const i = parseFloat(numero1);
-    const j = parseFloat(numero2);
-    if (!isNaN(i) && !isNaN(j)) {
-      if (j !== 0) {
-        setResultado(i / j);
-      } else {
-        setResultado('No se puede dividir por 0');
-      }
-    } else {
-      setResultado('Ingresa numeros validos');
+    let res;
+    switch (tipo) {
+      case '+':
+        res = n1 + n2;
+        break;
+      case '-':
+        res = n1 - n2;
+        break;
+      case 'x':
+        res = n1 * n2;
+        break;
+      case '/':
+        if (n2 === 0) {
+          setResultado('No se puede dividir por 0');
+          return;
+        }
+        res = n1 / n2;
+        break;
+      default:
+        setResultado('Operación no válida');
+        return;
     }
+
+    setResultado(res);
   };
 
   return (
@@ -68,48 +59,49 @@ export default function App() {
         onChangeText={setNumero2}
       />
 
-       <View style={styles.buttonsContainer}>
-      <TouchableOpacity style={[styles.btn, { backgroundColor: '#4CAF50' }]} onPress={sumarN}>
-        <Text style={styles.btnText}>➕</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={[styles.btn, { backgroundColor: '#560C70' }]} onPress={() => operar('+')}>
+          <Text style={styles.btnText}>+</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.btn, { backgroundColor: '#2196F3' }]} onPress={restarN}>
-        <Text style={styles.btnText}>➖</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={[styles.btn, { backgroundColor: '#560C70' }]} onPress={() => operar('-')}>
+          <Text style={styles.btnText}>-</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.btn, { backgroundColor: '#FF9800' }]} onPress={multipN}>
-        <Text style={styles.btnText}>✖️</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={[styles.btn, { backgroundColor: '#560C70' }]} onPress={() => operar('x')}>
+          <Text style={styles.btnText}>x</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.btn, { backgroundColor: '#F44336' }]} onPress={divN}>
-        <Text style={styles.btnText}>➗</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={[styles.btn, { backgroundColor: '#560C70' }]} onPress={() => operar('/')}>
+          <Text style={styles.btnText}>/</Text>
+        </TouchableOpacity>
+      </View>
 
       {resultado !== null && (
         <Text style={styles.result}>Resultado: {resultado}</Text>
       )}
-    </View> 
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({  
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 40,
-    backgroundColor:'black',
+    backgroundColor: 'black',
+    fontStyle: '',
   },
   header: {
     fontSize: 24,
     marginBottom: 20,
     fontWeight: 'bold',
-    color:'white',
+    color: 'white',
   },
   input: {
     height: 45,
-    borderColor: 'white',
+    borderColor: '#D6DBE0',
     borderWidth: 1,
     marginBottom: 10,
     width: '75%',
@@ -127,7 +119,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
-  
   btn: {
     width: '48%',
     paddingVertical: 20,
@@ -135,10 +126,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 6,
   },
-  
   btnText: {
-    fontSize: 30,
-    color: 'white',
+    fontSize: 40,
+    color: '#D6DBE0',
+    justifyContent: 'center',
+    alignItems:'center',
+    fontWeight: 'bold',
   },
   result: {
     marginTop: 20,
